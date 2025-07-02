@@ -9,8 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/loginDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// MongoDB Connection
+mongoose.connect('mongodb://localhost:27017/loginDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
+// Mongoose Schema
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
@@ -19,19 +24,21 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// 🔑 Secret key for JWT
-const JWT_SECRET = 'your-super-secret-key';
+// 🔐 Hardcoded credentials (no .env)
+const GMAIL_USER = 'anushak821@gmail.com';
+const GMAIL_PASS = 'qmdj nmiv dkfx kicg';  // Gmail app password
+const JWT_SECRET = 'MySuperSecureKey_2025!';
 
-// 📩 Configure Gmail transport
+// Nodemailer Transport
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'yourgmail@gmail.com',
-    pass: 'your-app-password' // use app password (not your Gmail password)
+    user: GMAIL_USER,
+    pass: GMAIL_PASS
   }
 });
 
-// 🔐 Login Route
+// 🔑 Login Route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -43,7 +50,7 @@ app.post('/login', async (req, res) => {
   res.send('Login successful');
 });
 
-// 🟠 Send Password Reset Email
+// 🔁 Reset Password Request (Send Email)
 app.post('/reset-password-request', async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -52,17 +59,21 @@ app.post('/reset-password-request', async (req, res) => {
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '15m' });
   const resetLink = `http://localhost:3000/reset-password?token=${token}`;
 
-  // send email
-  await transporter.sendMail({
-    to: email,
-    subject: 'Password Reset - AssetTracker',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password. This link is valid for 15 minutes.</p>`
-  });
+  try {
+    await transporter.sendMail({
+      to: email,
+      subject: 'Password Reset - AssetTracker',
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password. This link is valid for 15 minutes.</p>`
+    });
 
-  res.send('Reset password link has been sent to your email');
+    res.send('Reset password link has been sent to your email');
+  } catch (error) {
+    console.error('Email error:', error);
+    res.status(500).send('Failed to send email');
+  }
 });
 
-// 🟢 Reset Password (actual update)
+// 🟢 Final Reset Password Route
 app.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
   try {
@@ -76,8 +87,10 @@ app.post('/reset-password', async (req, res) => {
 
     res.send('Password reset successful');
   } catch (err) {
+    console.error(err);
     res.status(400).send('Invalid or expired token');
   }
 });
 
-app.listen(5000, () => console.log('Server started on http://localhost:5000'));
+// Start server
+app.listen(5000, () => console.log('✅ Server running on http://localhost:5000'));
