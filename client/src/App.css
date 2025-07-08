@@ -1,0 +1,90 @@
+/* App.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #0f172a, #1e293b);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  background-color: #1e293b;
+  padding: 40px;
+  border-radius: 15px;
+  width: 350px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.container h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.container p {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background-color: #334155;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #cbd5e1;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+button:last-of-type {
+  background-color: #f59e0b;
+}
+
+button:last-of-type:hover {
+  background-color: #d97706;
+}
+
+.demo-box {
+  background-color: #0f172a;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #cbd5e1;
+  border-left: 4px solid #3b82f6;
+}
+
+.demo-box span {
+  font-weight: bold;
+  color: #60a5fa;
+}
